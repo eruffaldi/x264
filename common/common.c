@@ -1150,6 +1150,7 @@ int x264_picture_alloc( x264_picture_t *pic, int i_csp, int i_width, int i_heigh
         [X264_CSP_BGR]  = { 1, { 256*3 },               { 256*1 },              },
         [X264_CSP_BGRA] = { 1, { 256*4 },               { 256*1 },              },
         [X264_CSP_RGB]  = { 1, { 256*3 },               { 256*1 },              },
+        [X264_CSP_MONO] = { 1, { 256*1 }, {2561*1} }
     };
 
     int csp = i_csp & X264_CSP_MASK;

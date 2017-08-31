@@ -1511,9 +1511,38 @@ cglobal prefetch_fenc_%1, 0,3
 %endif ; ARCH_X86_64
 %endmacro
 
+%macro PREFETCH_FENC1 1
+%if ARCH_X86_64
+cglobal prefetch_fenc_%1, 5,5
+    FIX_STRIDES r1, r3
+    and    r4d, 3
+    mov    eax, r4d
+    imul   r4d, r1d
+    lea    r0,  [r0+r4*4+64*SIZEOF_PIXEL]
+    prefetcht0  [r0]
+    prefetcht0  [r0+r1]
+    RET
+
+%else
+cglobal prefetch_fenc_%1, 0,3
+    mov    r2, r4m
+    mov    r1, r1m
+    mov    r0, r0m
+    FIX_STRIDES r1
+    and    r2, 3
+    imul   r2, r1
+    lea    r0, [r0+r2*4+64*SIZEOF_PIXEL]
+    prefetcht0 [r0]
+    prefetcht0 [r0+r1]
+    ret
+%endif ; ARCH_X86_64
+%endmacro
+
 INIT_MMX mmx2
 PREFETCH_FENC 420
 PREFETCH_FENC 422
+PREFETCH_FENC1 400
+PREFETCH_FENC1 400
 
 ;-----------------------------------------------------------------------------
 ; void prefetch_ref( pixel *pix, intptr_t stride, int parity )

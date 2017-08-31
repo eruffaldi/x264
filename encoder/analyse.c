@@ -1792,6 +1792,8 @@ static int x264_mb_analyse_inter_p4x4_chroma( x264_t *h, x264_mb_analysis_t *a, 
         return x264_mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_444 );
     else if( CHROMA_FORMAT == CHROMA_422 )
         return x264_mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_422 );
+    else if( CHROMA_FORMAT == CHROMA_400 )
+        return x264_mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_400 );
     else
         return x264_mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_420 );
 }

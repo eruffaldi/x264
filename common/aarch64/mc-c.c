@@ -28,6 +28,7 @@
 #include "mc.h"
 
 void x264_prefetch_ref_aarch64( uint8_t *, intptr_t, int );
+void x264_prefetch_fenc_400_aarch64( uint8_t *, intptr_t, uint8_t *, intptr_t, int );
 void x264_prefetch_fenc_420_aarch64( uint8_t *, intptr_t, uint8_t *, intptr_t, int );
 void x264_prefetch_fenc_422_aarch64( uint8_t *, intptr_t, uint8_t *, intptr_t, int );
 
@@ -223,6 +224,7 @@ void x264_mc_init_aarch64( int cpu, x264_mc_functions_t *pf )
     {
         pf->prefetch_fenc_420 = x264_prefetch_fenc_420_aarch64;
         pf->prefetch_fenc_422 = x264_prefetch_fenc_422_aarch64;
+        pf->prefetch_fenc_400 = x264_prefetch_fenc_400_aarch64;
         pf->prefetch_ref      = x264_prefetch_ref_aarch64;
     }
 

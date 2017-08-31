@@ -54,6 +54,10 @@ static int parse_csp_and_depth( char *csp_name, int *bit_depth )
         csp = X264_CSP_I420;
     else if( !strncmp( "422", csp_name, 3 ) )
         csp = X264_CSP_I422;
+    else if( !strncmp( "mono", csp_name, 4 ) )
+        csp = X264_CSP_MONO;
+    else if( !strncmp( "gray", csp_name, 4 ) )
+        csp = X264_CSP_MONO;
     else if( !strncmp( "444", csp_name, 3 ) && strncmp( "444alpha", csp_name, 8 ) ) // only accept alphaless 4:4:4
         csp = X264_CSP_I444;
 

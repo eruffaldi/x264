@@ -55,6 +55,7 @@ static int depth_filter_csp_is_supported( int csp )
            csp_mask == X264_CSP_BGR ||
            csp_mask == X264_CSP_RGB ||
            csp_mask == X264_CSP_BGRA;
+           // TODO add X264_CSP_MONO
 }
 
 static int csp_num_interleaved( int csp, int plane )
