@@ -1542,7 +1542,6 @@ INIT_MMX mmx2
 PREFETCH_FENC 420
 PREFETCH_FENC 422
 PREFETCH_FENC1 400
-PREFETCH_FENC1 400
 
 ;-----------------------------------------------------------------------------
 ; void prefetch_ref( pixel *pix, intptr_t stride, int parity )
