@@ -1302,7 +1302,7 @@ static int init_vid_filters( char *sequence, hnd_t *handle, video_info_t *info, 
     /* force the output csp to what the user specified (or the default) */
     param->i_csp = info->csp;
     int csp = info->csp & X264_CSP_MASK;
-    if( output_csp == X264_CSP_MONO && csp == X264_CSP_MONO ) // for the moment only exact mathc
+    if( output_csp == X264_CSP_MONO) // for the moment only exact match
         param->i_csp = X264_CSP_MONO;
     else if( output_csp == X264_CSP_I420 && (csp < X264_CSP_I420 || csp >= X264_CSP_I422) )
         param->i_csp = X264_CSP_I420;

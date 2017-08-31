@@ -159,7 +159,7 @@ static int convert_csp_to_pix_fmt( int csp )
         case X264_CSP_NV21: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_NONE      : AV_PIX_FMT_NV21;
         case X264_CSP_YUYV: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_NONE      : AV_PIX_FMT_YUYV422;
         case X264_CSP_UYVY: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_NONE      : AV_PIX_FMT_UYVY422;
-       // TODO add X264_CSP_MONO
+        case X264_CSP_MONO: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_GRAY16 : AV_PIX_FMT_GRAY8;
         /* the following is not supported by swscale at all */
         case X264_CSP_NV16:
         default:            return AV_PIX_FMT_NONE;
