@@ -711,6 +711,9 @@ static inline void x264_mb_init_fenc_cache( x264_t *h, int b_satd )
 
 static void x264_mb_analyse_intra_chroma( x264_t *h, x264_mb_analysis_t *a )
 {
+    if( CHROMA_FORMAT == CHROMA_400 )
+        return;
+
     if( a->i_satd_chroma < COST_MAX )
         return;
 

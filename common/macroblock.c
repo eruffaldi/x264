@@ -48,7 +48,7 @@ static NOINLINE void x264_mb_mc_0xywh( x264_t *h, int x, int y, int width, int h
         MC_LUMA( 0, 1 );
         MC_LUMA( 0, 2 );
     }
-    else
+    else if (CHROMA_FORMAT != CHROMA_400)
     {
         int v_shift = CHROMA_V_SHIFT;
         // Chroma in 4:2:0 is offset if MCing from a field of opposite parity
@@ -1015,7 +1015,9 @@ static void ALWAYS_INLINE x264_macroblock_cache_load( x264_t *h, int mb_x, int m
                 x264_copy_column8( h->mb.pic.p_fdec[1]-1+12*FDEC_STRIDE, h->mb.pic.p_fdec[1]+ 7+12*FDEC_STRIDE );
                 x264_copy_column8( h->mb.pic.p_fdec[2]-1+12*FDEC_STRIDE, h->mb.pic.p_fdec[2]+ 7+12*FDEC_STRIDE );
             }
-            x264_macroblock_load_pic_pointers( h, mb_x, mb_y, 1, 1, 0 );
+            else if( CHROMA_FORMAT != CHROMA_400) {
+                x264_macroblock_load_pic_pointers(h, mb_x, mb_y, 1, 1, 0);
+            }
         }
     }
     else
@@ -1695,7 +1697,7 @@ void x264_macroblock_cache_save( x264_t *h )
             x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 0, 1 );
             x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 2, 0, 1 );
         }
-        else
+        else if(CHROMA_FORMAT != CHROMA_400)
             x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 1, 1 );
     }
     else
@@ -1707,7 +1709,7 @@ void x264_macroblock_cache_save( x264_t *h )
             x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 0, 0 );
             x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 2, 0, 0 );
         }
-        else
+        else if(CHROMA_FORMAT != CHROMA_400)
             x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 1, 0 );
     }
 

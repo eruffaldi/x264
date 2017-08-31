@@ -1306,8 +1306,11 @@ for var in $CONFIG_HAVE; do
 done
 
 # generate exported config file
-
-config_chroma_format="X264_CSP_I$chroma_format"
+if [ "$chroma_format" == "400" ] ; then 
+    config_chroma_format="X264_CSP_MONO"
+else
+    config_chroma_format="X264_CSP_I$chroma_format"
+fi
 [ "$config_chroma_format" == "X264_CSP_Iall" ] && config_chroma_format="0"
 cat > x264_config.h << EOF
 #define X264_BIT_DEPTH     $bit_depth
