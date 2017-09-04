@@ -1322,7 +1322,6 @@ static int init_vid_filters( char *sequence, hnd_t *handle, video_info_t *info, 
 
     char args[20];
     sprintf( args, "bit_depth=%d", x264_bit_depth );
-
     if( x264_init_vid_filter( "depth", handle, &filter, info, param, args ) )
         return -1;
 
