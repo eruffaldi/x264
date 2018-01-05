@@ -64,6 +64,8 @@ static int frame_internal_csp( int external_csp )
         case X264_CSP_BGRA:
         case X264_CSP_RGB:
             return X264_CSP_I444;
+        case X264_CSP_MONO:
+            return X264_CSP_MONO;
         default:
             return X264_CSP_NONE;
     }
@@ -113,6 +115,17 @@ static x264_frame_t *frame_new( x264_t *h, int b_fdec )
         luma_plane_count = 3;
         frame->i_plane = 3;
         for( int i = 0; i < 3; i++ )
+        {
+            frame->i_width[i] = i_width;
+            frame->i_lines[i] = i_lines;
+            frame->i_stride[i] = i_stride;
+        }
+    }
+    else if( i_csp == X264_CSP_MONO )
+    {
+        luma_plane_count = 1;
+        frame->i_plane = 1;
+        for( int i = 0; i < 1; i++ )
         {
             frame->i_width[i] = i_width;
             frame->i_lines[i] = i_lines;
@@ -426,6 +439,13 @@ int x264_frame_copy_picture( x264_t *h, x264_frame_t *dst, x264_picture_t *src )
          h->mc.plane_copy_deinterleave_v210( dst->plane[0], dst->i_stride[0],
                                              dst->plane[1], dst->i_stride[1],
                                              (uint32_t *)pix[0], stride[0]/sizeof(uint32_t), h->param.i_width, h->param.i_height );
+    }
+    else if ( i_csp == X264_CSP_MONO) 
+    {
+        // full plane
+        get_plane_ptr( h, src, &pix[0], &stride[0], 0, 0, 0 );
+        h->mc.plane_copy( dst->plane[0], dst->i_stride[0], (pixel*)pix[0],
+                          stride[0]/sizeof(pixel), h->param.i_width, h->param.i_height );
     }
     else if( i_csp >= X264_CSP_BGR )
     {
