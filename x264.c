@@ -199,6 +199,9 @@ static const char * const pulldown_names[] = { "none", "22", "32", "64", "double
 static const char * const log_level_names[] = { "none", "error", "warning", "info", "debug", 0 };
 static const char * const output_csp_names[] =
 {
+#if !X264_CHROMA_FORMAT || X264_CHROMA_FORMAT == X264_CSP_MONO
+    "i400",
+#endif
 #if !X264_CHROMA_FORMAT || X264_CHROMA_FORMAT == X264_CSP_I420
     "i420",
 #endif
@@ -213,6 +216,7 @@ static const char * const output_csp_names[] =
 static const char * const chroma_format_names[] =
 {
     [0] = "all",
+    [X264_CSP_MONO] = "i400",
     [X264_CSP_I420] = "i420",
     [X264_CSP_I422] = "i422",
     [X264_CSP_I444] = "i444"
@@ -1312,7 +1316,9 @@ static int init_vid_filters( char *sequence, hnd_t *handle, video_info_t *info, 
     /* force the output csp to what the user specified (or the default) */
     param->i_csp = info->csp;
     int csp = info->csp & X264_CSP_MASK;
-    if( output_csp == X264_CSP_I420 && (csp < X264_CSP_I420 || csp >= X264_CSP_I422) )
+    if( output_csp == X264_CSP_MONO) // for the moment only exact match
+        param->i_csp = X264_CSP_MONO;
+    else if( output_csp == X264_CSP_I420 && (csp < X264_CSP_I420 || csp >= X264_CSP_I422) )
         param->i_csp = X264_CSP_I420;
     else if( output_csp == X264_CSP_I422 && (csp < X264_CSP_I422 || csp >= X264_CSP_I444) )
         param->i_csp = X264_CSP_I422;
@@ -1328,11 +1334,17 @@ static int init_vid_filters( char *sequence, hnd_t *handle, video_info_t *info, 
     if( x264_init_vid_filter( "resize", handle, &filter, info, param, NULL ) )
         return -1;
 
+<<<<<<< HEAD
+    char args[20];
+    sprintf( args, "bit_depth=%d", x264_bit_depth );
+    if( x264_init_vid_filter( "depth", handle, &filter, info, param, args ) )
+=======
     char args[20], name[20];
     sprintf( args, "bit_depth=%d", param->i_bitdepth );
     sprintf( name, "depth_%d", param->i_bitdepth );
 
     if( x264_init_vid_filter( name, handle, &filter, info, param, args ) )
+>>>>>>> videolan/master
         return -1;
 
     return 0;
@@ -1543,7 +1555,7 @@ static int parse( int argc, char **argv, x264_param_t *param, cli_opt_t *opt )
 #if X264_CHROMA_FORMAT
                 static const uint8_t output_csp_fix[] = { X264_CHROMA_FORMAT, X264_CSP_RGB };
 #else
-                static const uint8_t output_csp_fix[] = { X264_CSP_I420, X264_CSP_I422, X264_CSP_I444, X264_CSP_RGB };
+                static const uint8_t output_csp_fix[] = { X264_CSP_MONO, X264_CSP_I420, X264_CSP_I422, X264_CSP_I444, X264_CSP_RGB };
 #endif
                 param->i_csp = output_csp = output_csp_fix[output_csp];
                 break;
