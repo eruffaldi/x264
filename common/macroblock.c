@@ -1017,7 +1017,6 @@ static void ALWAYS_INLINE macroblock_cache_load( x264_t *h, int mb_x, int mb_y, 
             }
             else if( CHROMA_FORMAT != CHROMA_400) {
                 macroblock_load_pic_pointers( h, mb_x, mb_y, 1, 1, 0 );
-                x264_macroblock_load_pic_pointers(h, mb_x, mb_y, 1, 1, 0);
             }
         }
     }
@@ -1698,13 +1697,8 @@ void x264_macroblock_cache_save( x264_t *h )
             macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 0, 1 );
             macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 2, 0, 1 );
         }
-<<<<<<< HEAD
         else if(CHROMA_FORMAT != CHROMA_400)
-            x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 1, 1 );
-=======
-        else
             macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 1, 1 );
->>>>>>> videolan/master
     }
     else
     {
@@ -1715,13 +1709,8 @@ void x264_macroblock_cache_save( x264_t *h )
             macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 0, 0 );
             macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 2, 0, 0 );
         }
-<<<<<<< HEAD
         else if(CHROMA_FORMAT != CHROMA_400)
-            x264_macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 1, 0 );
-=======
-        else
             macroblock_store_pic( h, h->mb.i_mb_x, h->mb.i_mb_y, 1, 1, 0 );
->>>>>>> videolan/master
     }
 
     x264_prefetch_fenc( h, h->fdec, h->mb.i_mb_x, h->mb.i_mb_y );
