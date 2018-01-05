@@ -33,6 +33,9 @@
 #include <unistd.h>
 #endif
 
+
+
+
 const x264_cli_csp_t x264_cli_csps[] = {
     [X264_CSP_I420] = { "i420", 3, { 1, .5, .5 }, { 1, .5, .5 }, 2, 2 },
     [X264_CSP_I422] = { "i422", 3, { 1, .5, .5 }, { 1,  1,  1 }, 2, 1 },
@@ -47,7 +50,8 @@ const x264_cli_csp_t x264_cli_csps[] = {
     [X264_CSP_UYVY] = { "uyvy", 1, { 2 },         { 1 },         2, 1 },
     [X264_CSP_BGR]  = { "bgr",  1, { 3 },         { 1 },         1, 1 },
     [X264_CSP_BGRA] = { "bgra", 1, { 4 },         { 1 },         1, 1 },
-    [X264_CSP_RGB]  = { "rgb",  1, { 3 },         { 1 },         1, 1 },
+    [X264_CSP_RGB]  = { "rgb",  1, { 1 },         { 1 },         1, 1 },
+    [X264_CSP_MONO]  = { "mono",  1, { 1 },         { 1 },         1, 1 },
 };
 
 int x264_cli_csp_is_invalid( int csp )
