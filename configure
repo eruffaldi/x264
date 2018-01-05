@@ -30,13 +30,8 @@ Configuration options:
   --disable-thread         disable multithreaded encoding
   --disable-win32thread    disable win32threads (windows only)
   --disable-interlaced     disable interlaced encoding support
-<<<<<<< HEAD
-  --bit-depth=BIT_DEPTH    set output bit depth (8-10) [8]
-  --chroma-format=FORMAT   output chroma format (400, 420, 422, 444, all) [all]
-=======
   --bit-depth=BIT_DEPTH    set output bit depth (8, 10, all) [all]
-  --chroma-format=FORMAT   output chroma format (420, 422, 444, all) [all]
->>>>>>> videolan/master
+  --chroma-format=FORMAT   output chroma format (400, 420, 422, 444, all) [all]
 
 Advanced options:
   --disable-asm            disable platform-specific assembly optimizations
