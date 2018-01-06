@@ -475,7 +475,12 @@ static int validate_parameters( x264_t *h, int b_open )
 
     int i_csp = h->param.i_csp & X264_CSP_MASK;
 #if X264_CHROMA_FORMAT
-    if( CHROMA_FORMAT != CHROMA_420 && i_csp >= X264_CSP_I420 && i_csp < X264_CSP_I422 )
+    if( CHROMA_FORMAT != CHROMA_400 && i_csp == X264_CSP_MONO)
+    {
+        x264_log( h, X264_LOG_ERROR, "not compiled with 4:0:0 support\n" );
+        return -1;
+    }
+    else if( CHROMA_FORMAT != CHROMA_420 && i_csp >= X264_CSP_I420 && i_csp < X264_CSP_I422 )
     {
         x264_log( h, X264_LOG_ERROR, "not compiled with 4:2:0 support\n" );
         return -1;
@@ -494,7 +499,7 @@ static int validate_parameters( x264_t *h, int b_open )
     if( i_csp <= X264_CSP_NONE || i_csp >= X264_CSP_MAX )
     {
         x264_log( h, X264_LOG_ERROR, "invalid CSP (only I420/YV12/NV12/NV21/I422/YV16/NV16/YUYV/UYVY/"
-                                     "I444/YV24/BGR/BGRA/RGB supported)\n" );
+                                     "I444/YV24/BGR/BGRA/RGB/MONO supported)\n" );
         return -1;
     }
 
@@ -1348,6 +1353,11 @@ static void chroma_dsp_init( x264_t *h )
 
     switch( CHROMA_FORMAT )
     {
+        case CHROMA_400:
+            h->mc.prefetch_fenc = h->mc.prefetch_fenc_400; /* FIXME: doesn't cover V plane */
+            h->loopf.deblock_chroma_mbaff = h->loopf.deblock_luma_mbaff;
+            h->loopf.deblock_chroma_intra_mbaff = h->loopf.deblock_luma_intra_mbaff;
+            break;
         case CHROMA_420:
             memcpy( h->predict_chroma, h->predict_8x8c, sizeof(h->predict_chroma) );
             h->mc.prefetch_fenc = h->mc.prefetch_fenc_420;
