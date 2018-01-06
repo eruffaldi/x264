@@ -68,6 +68,7 @@ typedef struct
     int dst_csp;
     int input_range;
     struct SwsContext *ctx;
+    int monoquick;
     uint32_t ctx_flags;
     /* state of swapping chroma planes pre and post resize */
     int pre_swap_chroma;
@@ -160,6 +161,7 @@ static int convert_csp_to_pix_fmt( int csp )
         case X264_CSP_NV21: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_NONE      : AV_PIX_FMT_NV21;
         case X264_CSP_YUYV: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_NONE      : AV_PIX_FMT_YUYV422;
         case X264_CSP_UYVY: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_NONE      : AV_PIX_FMT_UYVY422;
+        case X264_CSP_MONO: return csp&X264_CSP_HIGH_DEPTH ? AV_PIX_FMT_GRAY16 : AV_PIX_FMT_GRAY8;
         /* the following is not supported by swscale at all */
         case X264_CSP_NV16:
         default:            return AV_PIX_FMT_NONE;
@@ -497,11 +499,18 @@ static int init( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info, x2
     if( h->dst.width != info->width || h->dst.height != info->height )
         x264_cli_log( NAME, X264_LOG_INFO, "resizing to %dx%d\n", h->dst.width, h->dst.height );
     if( h->dst.pix_fmt != src_pix_fmt )
-        x264_cli_log( NAME, X264_LOG_WARNING, "converting from %s to %s\n",
+    {
+        if( dst_csp == X264_CSP_MONO && h->dst.width == info->width && h->dst.height == info->height && ((src_csp >= X264_CSP_I420 && src_csp <= X264_CSP_NV16) || src_csp == X264_CSP_I444 || src_csp == X264_CSP_YV24))
+            h->monoquick = 1;
+        else
+            x264_cli_log( NAME, X264_LOG_WARNING, "converting from %s to %s\n",
                       av_get_pix_fmt_name( src_pix_fmt ), av_get_pix_fmt_name( h->dst.pix_fmt ) );
+    }
     else if( h->dst.range != h->input_range )
+    {
         x264_cli_log( NAME, X264_LOG_WARNING, "converting range from %s to %s\n",
                       h->input_range ? "PC" : "TV", h->dst.range ? "PC" : "TV" );
+    }
     h->dst_csp |= info->csp & X264_CSP_VFLIP; // preserve vflip
 
     /* if the input is not variable, initialize the context */
@@ -533,10 +542,16 @@ static int get_frame( hnd_t handle, cli_pic_t *output, int frame )
         return -1;
     if( h->variable_input && check_resizer( h, output ) )
         return -1;
-    h->working = 1;
+    h->working = 1;    
     if( h->pre_swap_chroma )
         XCHG( uint8_t*, output->img.plane[1], output->img.plane[2] );
-    if( h->ctx )
+    if(h->monoquick && output->img.stride[0] == h->buffer.img.stride[0])
+    {
+        //memcpy(h->buffer.img.plane[0],output->img.plane[0],h->buffer.img.stride[0]*h->buffer.img.height);
+        //output->img = h->buffer.img;
+        output->img.csp = h->dst_csp;
+    }
+    else if( h->ctx )
     {
         sws_scale( h->ctx, (const uint8_t* const*)output->img.plane, output->img.stride,
                    0, output->img.height, h->buffer.img.plane, h->buffer.img.stride );
@@ -546,7 +561,6 @@ static int get_frame( hnd_t handle, cli_pic_t *output, int frame )
         output->img.csp = h->dst_csp;
     if( h->post_swap_chroma )
         XCHG( uint8_t*, output->img.plane[1], output->img.plane[2] );
-
     return 0;
 }
 
