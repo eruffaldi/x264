@@ -48,7 +48,6 @@ const x264_cli_csp_t x264_cli_csps[] = {
     [X264_CSP_BGR]  = { "bgr",  1, { 3 },         { 1 },         1, 1 },
     [X264_CSP_BGRA] = { "bgra", 1, { 4 },         { 1 },         1, 1 },
     [X264_CSP_RGB]  = { "rgb",  1, { 3 },         { 1 },         1, 1 },
-    [X264_CSP_MONO] = { "mono", 1, { 1 },         { 1 },         1, 1 },
 };
 
 int x264_cli_csp_is_invalid( int csp )

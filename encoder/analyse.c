@@ -585,9 +585,6 @@ static inline void mb_init_fenc_cache( x264_t *h, int b_satd )
 
 static void mb_analyse_intra_chroma( x264_t *h, x264_mb_analysis_t *a )
 {
-    if( CHROMA_FORMAT == CHROMA_400 )
-        return;
-
     if( a->i_satd_chroma < COST_MAX )
         return;
 
@@ -1669,8 +1666,6 @@ static int mb_analyse_inter_p4x4_chroma( x264_t *h, x264_mb_analysis_t *a, pixel
         return mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_444 );
     else if( CHROMA_FORMAT == CHROMA_422 )
         return mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_422 );
-    else if( CHROMA_FORMAT == CHROMA_400 )
-        return mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_400 );
     else
         return mb_analyse_inter_p4x4_chroma_internal( h, a, p_fref, i8x8, size, CHROMA_420 );
 }

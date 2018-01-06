@@ -491,9 +491,7 @@ static ALWAYS_INLINE void mb_encode_chroma_internal( x264_t *h, int b_inter, int
 
 void x264_mb_encode_chroma( x264_t *h, int b_inter, int i_qp )
 {
-    if( CHROMA_FORMAT == CHROMA_400 )
-        return;
-    else if( CHROMA_FORMAT == CHROMA_420 )
+    if( CHROMA_FORMAT == CHROMA_420 )
         mb_encode_chroma_internal( h, b_inter, i_qp, 0 );
     else
         mb_encode_chroma_internal( h, b_inter, i_qp, 1 );
@@ -975,9 +973,7 @@ static ALWAYS_INLINE void macroblock_encode_internal( x264_t *h, int plane_count
 
 void x264_macroblock_encode( x264_t *h )
 {
-    if( CHROMA_FORMAT == CHROMA_400)
-        macroblock_encode_internal( h, 1, 0);
-    else if( CHROMA444 )
+    if( CHROMA444 )
         macroblock_encode_internal( h, 3, 0 );
     else
         macroblock_encode_internal( h, 1, 1 );
@@ -994,7 +990,6 @@ static ALWAYS_INLINE int macroblock_probe_skip_internal( x264_t *h, int b_bidir,
     ALIGNED_4( int16_t mvp[2] );
     int i_qp = h->mb.i_qp;
 
-    // Y plane
     for( int p = 0; p < plane_count; p++, i_qp = h->mb.i_chroma_qp )
     {
         int quant_cat = p ? CQM_4PC : CQM_4PY;
@@ -1033,7 +1028,6 @@ static ALWAYS_INLINE int macroblock_probe_skip_internal( x264_t *h, int b_bidir,
         }
     }
 
-    // UV plane
     if( chroma == CHROMA_420 || chroma == CHROMA_422 )
     {
         i_qp = h->mb.i_chroma_qp;
@@ -1136,8 +1130,6 @@ int x264_macroblock_probe_skip( x264_t *h, int b_bidir )
         return macroblock_probe_skip_internal( h, b_bidir, 3, CHROMA_444 );
     else if( CHROMA_FORMAT == CHROMA_422 )
         return macroblock_probe_skip_internal( h, b_bidir, 1, CHROMA_422 );
-    else if( CHROMA_FORMAT == CHROMA_400 )
-        return macroblock_probe_skip_internal( h, b_bidir, 1, CHROMA_400 );
     else
         return macroblock_probe_skip_internal( h, b_bidir, 1, CHROMA_420 );
 }
@@ -1377,8 +1369,6 @@ void x264_macroblock_encode_p8x8( x264_t *h, int i8 )
         macroblock_encode_p8x8_internal( h, i8, 3, CHROMA_444 );
     else if( CHROMA_FORMAT == CHROMA_422 )
         macroblock_encode_p8x8_internal( h, i8, 1, CHROMA_422 );
-    else if( CHROMA_FORMAT == CHROMA_400 )
-        macroblock_encode_p8x8_internal( h, i8, 1, CHROMA_400 );
     else
         macroblock_encode_p8x8_internal( h, i8, 1, CHROMA_420 );
 }
